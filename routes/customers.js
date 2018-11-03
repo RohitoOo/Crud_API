@@ -22,8 +22,9 @@ module.exports = server => {
         }
 
         catch(err) {
+            // console.log(err.message)
             // Handling Errors - Restify Errors 
-            console.log(err)
+            return next(new errors.InternalError(err.message))
         }
         next();
     })
@@ -54,4 +55,57 @@ module.exports = server => {
 
         next();
     })
+
+    // Find one customer 
+
+    server.get('/customer/:id' , async (req,res, next) => {
+        
+        // Old Methods ( Promise.then OR Callbacks )
+        // Customer.find({})
+        // .then(customersFromDatabase => {
+        //     console.log({customersFromDatabase})
+        // })
+
+        // Modern Async Await Method 
+
+        try {
+            const customerFromDatabase = await Customer.findById({_id: req.params.id})
+            res.send({customerFromDatabase})
+        }
+
+        catch(err) {
+            // console.log(err.message)
+            // Handling Errors - Restify Errors 
+            return next(new errors.InternalError(err.message))
+        }
+        next();
+    })
+
+    // Update Customer 
+
+    server.put('/customer/:id' , async (req,res, next) => {
+        
+        // Old Methods ( Promise.then OR Callbacks )
+        // Customer.find({})
+        // .then(customersFromDatabase => {
+        //     console.log({customersFromDatabase})
+        // })
+
+        // Modern Async Await Method 
+
+        try {
+            // findOneAndUpdate()
+            // Find with id from Params ( first Argument ) and Update with req.body ( Second Argument )
+            const customerFromDatabase = await Customer.findOneAndUpdate({_id: req.params.id}, req.body)
+            res.send(200)
+        }
+
+        catch(err) {
+            // console.log(err.message)
+            // Handling Errors - Restify Errors 
+            return next(new errors.InternalError(err.message))
+        }
+        next();
+    })
+    
 }
