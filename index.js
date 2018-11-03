@@ -6,15 +6,13 @@ const server = restify.createServer()
 
 // Destructuring of Config File 
 
-const {PORT, MONGODB_URI} = config
+const { PORT, MONGODB_URI } = config
 
-// Middleware 
+// Resitify Middleware 
 
 server.use(restify.plugins.bodyParser());
 
-
 server.listen(PORT , () => {
-   
     mongoose.connect(
         MONGODB_URI,
         { useNewUrlParser: true }
@@ -27,5 +25,6 @@ db.on('error', (err) => console.log(err))
 
 db.once('open' , () => {
     require('./routes/customers')(server)
+    require('./routes/users')(server)
     console.log("Connected On Port", PORT)
 })
