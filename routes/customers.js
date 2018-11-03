@@ -18,9 +18,7 @@ module.exports = server => {
         try {
             const customersFromDatabase = await Customer.find({})
             res.send({customersFromDatabase})
-    
         }
-
         catch(err) {
             // console.log(err.message)
             // Handling Errors - Restify Errors 
@@ -97,6 +95,30 @@ module.exports = server => {
             // findOneAndUpdate()
             // Find with id from Params ( first Argument ) and Update with req.body ( Second Argument )
             const customerFromDatabase = await Customer.findOneAndUpdate({_id: req.params.id}, req.body)
+            res.send(200)
+        }
+
+        catch(err) {
+            // console.log(err.message)
+            // Handling Errors - Restify Errors 
+            return next(new errors.InternalError(err.message))
+        }
+        next();
+    })
+
+    server.del('/customer/:id' , async (req,res, next) => {
+        
+        // Old Methods ( Promise.then OR Callbacks )
+        // Customer.find({})
+        // .then(customersFromDatabase => {
+        //     console.log({customersFromDatabase})
+        // })
+
+        // Modern Async Await Method 
+
+        try {
+            // findOneAndDelete()
+            const customerFromDatabase = await Customer.findOneAndDelete({_id: req.params.id})
             res.send(200)
         }
 
