@@ -4,7 +4,7 @@ const bcrypt = require('bcryptjs');
 module.exports = server => {
     server.post('/register', async (req,res,next) => {
         
-        const { email, password} = req.body; 
+        const { email, password } = req.body; 
 
         
         const user = new User({
@@ -12,20 +12,36 @@ module.exports = server => {
             password
         });
 
+        console.log("Not HASED",user.password)
 
-        // bcrypt.genSalt(10, (err, salt) => {
-        //     bcrypt.hash(user)
-        // })
+        bcrypt.genSalt(10, (err, salt) => {
+            bcrypt.hash(user.password, salt, async (err, hash) => {
+                // Hash Password 
+                user.password = hash
 
+                // Save User 
+                try {
+                     await user.save()
+                        .then( () => {
+                            console.log("Registered!")
+                        })
+                        res.send(201)
+                        next();
+                    }catch(err){
+                        console.log(err)
+                    }
+            })
 
-        const newUser = await user.save()
-        .then( () => {
-            console.log("Registered!",newUser )
+       
+
         })
 
-        res.send(200)
 
-        next();
+
+   
+
+
+       
 
     })
 }
