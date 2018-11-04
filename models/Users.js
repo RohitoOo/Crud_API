@@ -1,7 +1,7 @@
 const mongoose = require('mongoose')
-
+const timeStamp = require('mongoose-timestamp')
 const UserSchema = new mongoose.Schema({
-    name: {
+    email: {
         type: String,
         required: true,
         // Trim Off White Space 
@@ -13,6 +13,6 @@ const UserSchema = new mongoose.Schema({
     }
 })
 // Created At And Updated Add Will be Added Automatically 
-CustomerSchema.plugin(timeStamp);
+UserSchema.plugin(timeStamp);
 
-const Customer = module.exports = mongoose.model("Customer", CustomerSchema);
+const User = module.exports = mongoose.model("User", UserSchema);
