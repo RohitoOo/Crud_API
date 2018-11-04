@@ -37,7 +37,7 @@ module.exports = server => {
     })
 
 
-    server.post('/user', async (req,res,next) => {
+    server.post('/auth', async (req,res,next) => {
 
        try {const user = await User.findOne({email: req.body.email})
 
