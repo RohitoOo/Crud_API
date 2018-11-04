@@ -10,30 +10,39 @@ module.exports = server => {
         
         const { email, password } = req.body; 
 
-        
-        const user = new User({
-            email,
-            password
-        });
-        bcrypt.genSalt(10, (err, salt) => {
-            bcrypt.hash(user.password, salt, async (err, hash) => {
-                // Hash Password 
-                user.password = hash
-
-                // Save User 
-                try {
-                     await user.save()
-                        .then( () => {
-                            console.log("Registered!")
-                        })
-                        res.send(201)
-                        next();
-                    }catch(err){
-                        return next(new errors.InternalErrors(err.message))
-                    }
+        try{
+            const user = new User({
+                email,
+                password
+            });
+            bcrypt.genSalt(10, (err, salt) => {
+                bcrypt.hash(user.password, salt, async (err, hash) => {
+                    // Hash Password 
+                    user.password = hash
+    
+                    // Save User 
+                    try {
+                         await user.save()
+                            .then( () => {
+                                console.log("Registered!")
+                            })
+                            res.send(201)
+                            next();
+                        }catch(err){
+                            res.send(err.message)
+                            }
+                })
+    
             })
-
-        })
+        }
+        catch(err){
+            console.log(err)
+            res.send(err)
+            next();
+        }
+        next();
+        
+    
     })
 
 

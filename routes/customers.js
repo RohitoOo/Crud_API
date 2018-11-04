@@ -1,6 +1,8 @@
 const errors = require('restify-errors');
 const Customer = require('../models/Customers')
 const mongoose = require('mongoose')
+const config = require('../config')
+const rjwt = require('restify-jwt-community')
 
 module.exports = server => {
 
@@ -27,9 +29,9 @@ module.exports = server => {
         next();
     })
 
-    // Add Customers 
+    // Add Customers ( PROTECTED ROUTE )
 
-    server.post('/customer' , async (req,res,next) => {
+    server.post('/customer' , rjwt({ secret: config.JWT_SECRET }), async (req,res,next) => {
 
         // Destructuring Req.Body Object 
         const {name,email,balance} = req.body;
@@ -79,9 +81,9 @@ module.exports = server => {
         next();
     })
 
-    // Update Customer 
+    // Update Customer ( Protected Route )
 
-    server.put('/customer/:id' , async (req,res, next) => {
+    server.put('/customer/:id' , rjwt({ secret: config.JWT_SECRET }) , async (req,res, next) => {
         
         // Old Methods ( Promise.then OR Callbacks )
         // Customer.find({})
@@ -106,7 +108,9 @@ module.exports = server => {
         next();
     })
 
-    server.del('/customer/:id' , async (req,res, next) => {
+    // Delete Customer ( Protected Route )
+
+    server.del('/customer/:id' , rjwt({ secret: config.JWT_SECRET }) , async (req,res, next) => {
         
         // Old Methods ( Promise.then OR Callbacks )
         // Customer.find({})
